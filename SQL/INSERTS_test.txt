@@ -1,0 +1,92 @@
+INSERT INTO Nacionalidade (pais) VALUES
+('Brasil'),
+('Estados Unidos'),
+('Alemanha'),
+('Japão'),
+('França');
+
+INSERT INTO Cargo (nome_cargo) VALUES
+('Piloto'),
+('Copiloto'),
+('Comissário de Bordo'),
+('Mecânico de Aeronaves'),
+('Despachante Operacional');
+
+INSERT INTO Aeroporto (cnpj, razao_social, nome_fantasia) VALUES
+('12345678000101', 'Aeroporto Internacional de Guarulhos S/A', 'GRU Airport'),
+('98765432000102', 'Aeroporto Internacional do Galeão S/A', 'Galeão'),
+('45678912000103', 'Aeroporto de Brasília S/A', 'BSB Airport'),
+('15975368000104', 'Aeroporto Internacional de Salvador S/A', 'Salvador Airport'),
+('75315948000105', 'Aeroporto Internacional de Recife S/A', 'Recife Airport');
+
+INSERT INTO Companhia (cnpj, razao_social, nome_fantasia) VALUES
+('11122233000144', 'LATAM Airlines Group S.A.', 'LATAM'),
+('55566677000188', 'Gol Linhas Aéreas Inteligentes S.A.', 'Gol'),
+('99988877000155', 'Azul Linhas Aéreas Brasileiras S.A.', 'Azul'),
+('33344455000122', 'American Airlines Inc.', 'American Airlines'),
+('77788899000166', 'Lufthansa AG', 'Lufthansa');
+
+INSERT INTO Modelo (nome_modelo, pesomax_kg, capacidade) VALUES
+('Boeing 737', 79015, 189),
+('Airbus A320', 77000, 180),
+('Embraer E195', 52000, 124),
+('Boeing 777', 347800, 396),
+('Airbus A380', 560000, 850);
+
+INSERT INTO Aeronave (num_serie, cnpj_companhia, id_modelo, data_fabricacao) VALUES
+('A12345', '11122233000144', 1, '2015-06-15'),
+('B67890', '55566677000188', 2, '2017-09-25'),
+('C11223', '99988877000155', 3, '2018-03-10'),
+('D44556', '33344455000122', 4, '2019-07-19'),
+('E78901', '77788899000166', 5, '2020-11-30');
+
+INSERT INTO Mecanico (cpf, nome, data_nasc, email) VALUES
+('12345678901', 'Carlos Silva', '1985-05-20', 'carlos@email.com'),
+('23456789012', 'Ana Souza', '1990-07-14', 'ana@email.com'),
+('34567890123', 'Pedro Lima', '1978-12-03', 'pedro@email.com'),
+('45678901234', 'Mariana Alves', '1992-04-22', 'mariana@email.com'),
+('56789012345', 'João Pereira', '1980-09-30', 'joao@email.com');
+
+INSERT INTO Inspecao (num_serie_aeronave, data, hora, observacoes) VALUES
+('A12345', '2024-02-01', '08:00:00', 'Inspeção de rotina'),
+('B67890', '2024-02-02', '09:30:00', 'Substituição de peça'),
+('C11223', '2024-02-03', '10:15:00', 'Verificação de motores'),
+('D44556', '2024-02-04', '11:45:00', 'Troca de óleo'),
+('E78901', '2024-02-05', '13:00:00', 'Teste de sistemas elétricos');
+
+INSERT INTO Mecanico_Inspecao (cpf_mecanico, id_inspecao) VALUES
+('12345678901', 1),
+('23456789012', 2),
+('34567890123', 3),
+('45678901234', 4),
+('56789012345', 5);
+
+INSERT INTO Passageiro (cpf, id_nacionalidade, nome, passaporte, data_nasc) VALUES
+('22233344455', 1, 'Ana Pereira', 'BR123456', '1992-07-18');
+
+INSERT INTO Tripulante (cpf, id_nacionalidade, id_cargo, nome, data_nasc) VALUES
+('33344455566', 1, 1, 'Marcos Silva', '1980-03-22');
+
+INSERT INTO Pista (cnpj_aeroporto, comprimento, largura, orientacao, data_criacao, status) VALUES
+('12345678000101', 3000, 45, 'Norte-Sul', '2005-05-15', 'Ativa');
+
+INSERT INTO Cabeceira (id_pista, designacao, orientacao, status, latitude, longitude) VALUES
+(1, 'Cabeceira 1', '180°', 'Ativa', -23.4321, -46.4690);
+
+INSERT INTO PaisDestino (pais) VALUES
+('França'), ('Canadá'), ('Alemanha');
+
+INSERT INTO Portao (embarque, status) VALUES
+('A1', 'Disponível'), ('B2', 'Ocupado');
+
+INSERT INTO Voo (id_cabeceira, num_serie_aeronave, id_portao, id_destino, hrr_chegada, hrr_partida, condicao_voo, data_chegada, data_partida) VALUES
+(1, 'A12345', 1, 1, '12:00:00', '10:00:00', 'No horário', '2024-02-05', '2024-02-05');
+
+INSERT INTO Passagem (id_voo, cpf_passageiro, num_assento, data_emissao) VALUES
+(1, '22233344455', '12A', '2024-01-15');
+
+INSERT INTO Voo_Tripulante (id_voo, cpf_tripulante) VALUES
+(1, '33344455566');
+
+INSERT INTO Endereco (cnpj_aeroporto, cnpj_companhia, cpf_mecanico, cpf_passageiro, cpf_tripulante, logradouro, lote, quadra, num, bairro_setor, complemento, cidade, estado, cep) VALUES
+('12345678000101', '11122233000144', '12345678901', '22233344455', '33344455566', 'Av. Aeroporto', '1', 'A', '100', 'Centro', 'Terminal 1', 'São Paulo', 'SP', '01001000');
