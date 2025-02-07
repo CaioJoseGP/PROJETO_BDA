@@ -1,0 +1,174 @@
+CREATE DATABASE AeroportoDB;
+USE AeroportoDB;
+
+CREATE TABLE Nacionalidade (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pais VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Cargo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_cargo VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Aeroporto (
+    cnpj CHAR(14) PRIMARY KEY,
+    razao_social VARCHAR(255) NOT NULL,
+    nome_fantasia VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Companhia (
+    cnpj CHAR(14) PRIMARY KEY,
+    razao_social VARCHAR(255) NOT NULL,
+    nome_fantasia VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Modelo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_modelo VARCHAR(100) NOT NULL,
+    pesomax_kg INT NOT NULL,
+    capacidade INT NOT NULL
+);
+
+CREATE TABLE Aeronave (
+    num_serie VARCHAR(50) PRIMARY KEY,
+    cnpj_companhia CHAR(14) NOT NULL,
+    id_modelo INT NOT NULL,
+    data_fabricacao DATE NOT NULL,
+    FOREIGN KEY (cnpj_companhia) REFERENCES Companhia(cnpj),
+    FOREIGN KEY (id_modelo) REFERENCES Modelo(id)
+);
+
+CREATE TABLE Mecanico (
+    cpf CHAR(11) PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    data_nasc DATE NOT NULL,
+    email VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Inspecao (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    num_serie_aeronave VARCHAR(50) NOT NULL,
+    data DATE NOT NULL,
+    hora TIME NOT NULL,
+    observacoes TEXT,
+    FOREIGN KEY (num_serie_aeronave) REFERENCES Aeronave(num_serie)
+);
+
+CREATE TABLE Mecanico_Inspecao (
+    cpf_mecanico CHAR(11) NOT NULL,
+    id_inspecao INT NOT NULL,
+    PRIMARY KEY (cpf_mecanico, id_inspecao),
+    FOREIGN KEY (cpf_mecanico) REFERENCES Mecanico(cpf),
+    FOREIGN KEY (id_inspecao) REFERENCES Inspecao(id)
+);
+
+CREATE TABLE Passageiro (
+    cpf CHAR(11) PRIMARY KEY,
+    id_nacionalidade INT NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    passaporte VARCHAR(50) UNIQUE NOT NULL,
+    data_nasc DATE NOT NULL,
+    FOREIGN KEY (id_nacionalidade) REFERENCES Nacionalidade(id)
+);
+
+CREATE TABLE Tripulante (
+    cpf CHAR(11) PRIMARY KEY,
+    id_nacionalidade INT NOT NULL,
+    id_cargo INT NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    data_nasc DATE NOT NULL,
+    FOREIGN KEY (id_nacionalidade) REFERENCES Nacionalidade(id),
+    FOREIGN KEY (id_cargo) REFERENCES Cargo(id)
+);
+
+CREATE TABLE Pista (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cnpj_aeroporto CHAR(14) NOT NULL,
+    comprimento INT NOT NULL,
+    largura INT NOT NULL,
+    orientacao VARCHAR(50) NOT NULL,
+    data_criacao DATE NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (cnpj_aeroporto) REFERENCES Aeroporto(cnpj)
+);
+
+CREATE TABLE Cabeceira (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_pista INT NOT NULL,
+    designacao VARCHAR(50) NOT NULL,
+    orientacao VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    latitude DECIMAL(9,6) NOT NULL,
+    longitude DECIMAL(9,6) NOT NULL,
+    FOREIGN KEY (id_pista) REFERENCES Pista(id)
+);
+
+CREATE TABLE PaisDestino (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pais VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Portao (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    embarque VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Voo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_cabeceira INT NOT NULL,
+    num_serie_aeronave VARCHAR(50) NOT NULL,
+    id_portao INT NOT NULL,
+    id_destino INT NOT NULL,
+    hrr_chegada TIME NOT NULL,
+    hrr_partida TIME NOT NULL,
+    condicao_voo VARCHAR(50) NOT NULL,
+    data_chegada DATE NOT NULL,
+    data_partida DATE NOT NULL,
+    FOREIGN KEY (id_cabeceira) REFERENCES Cabeceira(id),
+    FOREIGN KEY (num_serie_aeronave) REFERENCES Aeronave(num_serie),
+    FOREIGN KEY (id_portao) REFERENCES Portao(id),
+    FOREIGN KEY (id_destino) REFERENCES PaisDestino(id)
+);
+
+CREATE TABLE Passagem (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_voo INT NOT NULL,
+    cpf_passageiro CHAR(11) NOT NULL,
+    num_assento VARCHAR(10) NOT NULL,
+    data_emissao DATE NOT NULL,
+    FOREIGN KEY (id_voo) REFERENCES Voo(id),
+    FOREIGN KEY (cpf_passageiro) REFERENCES Passageiro(cpf)
+);
+
+CREATE TABLE Voo_Tripulante (
+    id_voo INT NOT NULL,
+    cpf_tripulante CHAR(11) NOT NULL,
+    PRIMARY KEY (id_voo, cpf_tripulante),
+    FOREIGN KEY (id_voo) REFERENCES Voo(id),
+    FOREIGN KEY (cpf_tripulante) REFERENCES Tripulante(cpf)
+);
+
+CREATE TABLE Endereco (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cnpj_aeroporto CHAR(14) UNIQUE NOT NULL,
+    cnpj_companhia CHAR(14) UNIQUE NOT NULL,
+    cpf_mecanico CHAR(11) UNIQUE NOT NULL,
+    cpf_passageiro CHAR(11) UNIQUE NOT NULL,
+    cpf_tripulante CHAR(11) UNIQUE NOT NULL,
+    logradouro VARCHAR(255) NOT NULL,
+    lote VARCHAR(10),
+    quadra VARCHAR(10),
+    num VARCHAR(10) NOT NULL,
+    bairro_setor VARCHAR(100) NOT NULL,
+    complemento VARCHAR(255),
+    cidade VARCHAR(100) NOT NULL,
+    estado CHAR(2) NOT NULL,
+    cep CHAR(8) NOT NULL,
+    FOREIGN KEY (cnpj_aeroporto) REFERENCES Aeroporto(cnpj),
+    FOREIGN KEY (cnpj_companhia) REFERENCES Companhia(cnpj),
+    FOREIGN KEY (cpf_mecanico) REFERENCES Mecanico(cpf),
+    FOREIGN KEY (cpf_passageiro) REFERENCES Passageiro(cpf),
+    FOREIGN KEY (cpf_tripulante) REFERENCES Tripulante(cpf)
+);
